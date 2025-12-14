@@ -19,17 +19,7 @@ const ProductCard = ({ product, onPress }) => {
       </View>
       <View style={styles.infoContainer}>
         <ThemeText
-          variant={
-            product.name === 'Matcha Opera Cake' ? 'productNameMatcha' :
-            product.name === 'Vanilla Bean Éclair' ? 'productNameEclair' :
-            product.name === 'Strawberry Mille-Feuille' ? 'productNameMille' :
-            product.category === 'Macarons' ? 'productNameMacarons' :
-            product.category === 'Tarts' ? 'productNameTarts' :
-            product.category === 'Cakes' ? 'productNameCakes' :
-            product.category === 'Pastries' ? 'productNamePastries' :
-            product.category === 'Pies' ? 'productNamePies' :
-            'productName'
-          }
+          variant="productName"
           style={styles.name}
           numberOfLines={2}
         >

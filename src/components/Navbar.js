@@ -3,6 +3,7 @@ import { View, TouchableOpacity, StyleSheet, Animated, Dimensions, Modal, Text }
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useCart } from '../context/CartContext';
+import { useAuthContext } from '../context/AuthContext';
 import ThemeText from './atoms/ThemeText';
 import { theme } from '../theme/theme';
 
@@ -12,6 +13,7 @@ const { width } = Dimensions.get('window');
 // Komponen Navbar dengan sidebar animasi
 const Navbar = ({ navigation }) => {
   const { getTotalItems } = useCart();
+  const { user, isAuthenticated, logout } = useAuthContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const slideAnim = useRef(new Animated.Value(-width)).current; // Start off-screen to the left
 
@@ -34,18 +36,19 @@ const Navbar = ({ navigation }) => {
       }).start();
     }
   };
+
   // Menu items untuk sidebar
   const menuItems = [
     { name: 'Home', icon: 'home-outline', screen: 'Home' },
     { name: 'Dashboard', icon: 'bar-chart-outline', screen: 'Dashboard' },
-    { name: 'Catalog', icon: 'grid-outline', screen: 'Catalog' },
-    { name: 'About', icon: 'information-circle-outline', screen: 'About' },
+    { name: 'About Us', icon: 'information-circle-outline', screen: 'About' },
     { name: 'Cart', icon: 'cart-outline', screen: 'Cart' },
+    { name: 'Admin Panel', icon: 'settings-outline', screen: 'AdminProductList' }, // Menu Admin Baru
   ];
 
   return (
     <>
-       {/*Navbar dengan LinearGradient*/}
+      {/*Navbar dengan LinearGradient*/}
       <LinearGradient
         colors={[theme.colors.primary, theme.colors.darkPink]}
         start={{ x: 0, y: 0 }}
@@ -82,7 +85,7 @@ const Navbar = ({ navigation }) => {
           animationType="none" // Disable default animation
           transparent={true}
           onRequestClose={toggleSidebar}
-        > {/*Overlay untuk menutup sidebar saat ditekan di luar*/}
+        >{/*Overlay untuk menutup sidebar saat ditekan di luar*/}
           <TouchableOpacity style={styles.sidebarOverlay} onPress={toggleSidebar} activeOpacity={1}>
             <Animated.View style={[styles.sidebarContainer, { transform: [{ translateX: slideAnim }] }]}>
               <View style={styles.sidebar}>
@@ -97,6 +100,31 @@ const Navbar = ({ navigation }) => {
                   </View>
                   <View style={styles.sidebarDivider} />
                 </View>
+
+                {/* User Info - Clickable to Open Profile */}
+                {isAuthenticated && user && (
+                  <TouchableOpacity
+                    style={styles.userInfoContainer}
+                    onPress={() => {
+                      navigation.navigate('Profile');
+                      toggleSidebar();
+                    }}
+                  >
+                    <View style={styles.userAvatar}>
+                      <Ionicons name="person" size={24} color={theme.colors.primary} />
+                    </View>
+                    <View style={styles.userDetails}>
+                      <Text style={styles.userName}>{user.full_name || 'User'}</Text>
+                      <Text style={styles.userEmail}>{user.email}</Text>
+                      <Text style={{ fontSize: 10, color: theme.colors.primary, marginTop: 4 }}>
+                        Tap to view profile
+                      </Text>
+                    </View>
+                    <Ionicons name="chevron-forward" size={20} color={theme.colors.gray} />
+                  </TouchableOpacity>
+                )}
+
+                {/* Menu Items */}
                 {menuItems.map((item, index) => (
                   <TouchableOpacity
                     key={index}
@@ -322,8 +350,37 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'flex-start',
   },
-
-
+  userInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: theme.spacing.lg,
+    backgroundColor: theme.colors.quaternary,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.lightGray,
+  },
+  userAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: theme.colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: theme.spacing.md,
+    ...theme.shadows.small,
+  },
+  userDetails: {
+    flex: 1,
+  },
+  userName: {
+    fontSize: theme.fontSizes.md,
+    fontWeight: 'bold',
+    color: theme.colors.black,
+    marginBottom: theme.spacing.xs / 2,
+  },
+  userEmail: {
+    fontSize: theme.fontSizes.sm,
+    color: theme.colors.gray,
+  },
 });
 
 

@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useCart } from '../context/CartContext';
+import { useAuthContext } from '../context/AuthContext';
 import { theme } from '../theme/theme';
 import HomeScreen from '../screens/HomeScreen';
 import CatalogScreen from '../screens/CatalogScreen';
@@ -11,6 +12,10 @@ import DetailScreen from '../screens/DetailScreen';
 import CartScreen from '../screens/CartScreen';
 import AboutScreen from '../screens/AboutScreen';
 import DashboardScreen from '../screens/DashboardScreen';
+import LoginScreen from '../screens/LoginScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import AdminProductListScreen from '../screens/admin/AdminProductListScreen';
+import AdminEditProductScreen from '../screens/admin/AdminEditProductScreen';
 
 // Membuat stack navigator
 const Stack = createNativeStackNavigator();
@@ -18,7 +23,9 @@ const Stack = createNativeStackNavigator();
 // Komponen navigasi utama
 const Navigation = () => {
   const { getTotalItems } = useCart();
-// Ikon keranjang dengan badge jumlah item
+  const { isAuthenticated, user } = useAuthContext();
+  
+  // Ikon keranjang dengan badge jumlah item
   const CartIcon = ({ navigation }) => (
     <TouchableOpacity
       onPress={() => navigation.navigate('Cart')}
@@ -34,11 +41,31 @@ const Navigation = () => {
       )}
     </TouchableOpacity>
   );
-  // Struktur navigasi dengan screen dan opsi header
+  
+  // Ikon user/profile
+  const UserIcon = ({ navigation }) => (
+    <TouchableOpacity
+      onPress={() => {
+        if (isAuthenticated) {
+          navigation.navigate('Profile');
+        } else {
+          navigation.navigate('Login');
+        }
+      }}
+      style={styles.userIconContainer}
+    >
+      <Ionicons 
+        name={isAuthenticated ? "person" : "person-outline"} 
+        size={26} 
+        color={isAuthenticated ? theme.colors.accent : theme.colors.primary} 
+      />
+    </TouchableOpacity>
+  );
+
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName={isAuthenticated ? "Home" : "Login"}
         screenOptions={{
           headerStyle: {
             backgroundColor: theme.colors.white,
@@ -60,15 +87,26 @@ const Navigation = () => {
           component={HomeScreen}
           options={({ navigation }) => ({
             headerShown: false,
-            headerRight: () => <CartIcon navigation={navigation} />,
+            headerRight: () => (
+              <View style={{ flexDirection: 'row' }}>
+                <UserIcon navigation={navigation} />
+                <CartIcon navigation={navigation} />
+              </View>
+            ),
           })}
         />
+        {/* ... existing screens ... */}
         <Stack.Screen
           name="Catalog"
           component={CatalogScreen}
           options={({ navigation }) => ({
             headerShown: false,
-            headerRight: () => <CartIcon navigation={navigation} />,
+            headerRight: () => (
+              <View style={{ flexDirection: 'row' }}>
+                <UserIcon navigation={navigation} />
+                <CartIcon navigation={navigation} />
+              </View>
+            ),
           })}
         />
         <Stack.Screen
@@ -99,15 +137,47 @@ const Navigation = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{
+            headerShown: false,
+            presentation: 'modal',
+          }}
+        />
+        <Stack.Screen 
+          name="Profile" 
+          component={ProfileScreen} 
+          options={{
+            headerShown: false,
+            presentation: 'card',
+            animation: 'slide_from_right'
+          }}
+        />
+        
+        {/* Admin Screens */}
+        <Stack.Screen 
+          name="AdminProductList" 
+          component={AdminProductListScreen} 
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="AdminEditProduct" 
+          component={AdminEditProductScreen} 
+          options={{ headerShown: false }} 
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
-// Gaya untuk ikon keranjang dan badge
+// Gaya untuk ikon keranjang, user, dan badge
 const styles = StyleSheet.create({
   cartIconContainer: {
-    marginRight: theme.spacing.lg,
+    marginRight: theme.spacing.md,
     position: 'relative',
+  },
+  userIconContainer: {
+    marginRight: theme.spacing.lg,
   },
   cartBadge: {
     position: 'absolute',

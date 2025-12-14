@@ -2,9 +2,13 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useFonts } from 'expo-font';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { ClerkProvider } from '@clerk/clerk-expo';
 import { CartProvider } from './src/context/CartContext';
+import { AuthProvider } from './src/context/AuthContext';
+import { ProductProvider } from './src/context/ProductContext';
 import Navigation from './src/config/navigation';
 import { theme } from './src/theme/theme';
+import { tokenCache, clerkPublishableKey } from './src/config/clerk';
 
 // Komponen utama aplikasi
 export default function App() {
@@ -16,7 +20,8 @@ export default function App() {
     'PlayfairDisplay-Medium': require('./assets/fonts/PlayfairDisplay-Medium.ttf'),
     'PlayfairDisplay-Regular': require('./assets/fonts/PlayfairDisplay-Regular.ttf'),
   });
-// Menangani status pemuatan font
+  
+  // Menangani status pemuatan font
   if (!fontsLoaded) {
     return (
       <View style={styles.loadingContainer}>
@@ -24,6 +29,7 @@ export default function App() {
       </View>
     );
   }
+  
   // Menangani error pemuatan font
   if (error) {
     console.error('Font loading error:', error);
@@ -33,15 +39,22 @@ export default function App() {
       </View>
     );
   }
-  // Struktur utama aplikasi dengan penyedia konteks dan navigasi
+  
+  // Struktur utama aplikasi dengan authentication dan penyedia konteks
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
-        <CartProvider>
-          <Navigation />
-        </CartProvider>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
+      <AuthProvider>
+        <SafeAreaProvider>
+          <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+            <ProductProvider>
+              <CartProvider>
+                <Navigation />
+              </CartProvider>
+            </ProductProvider>
+          </SafeAreaView>
+        </SafeAreaProvider>
+      </AuthProvider>
+    </ClerkProvider>
   );
 }
 // Gaya untuk komponen utama

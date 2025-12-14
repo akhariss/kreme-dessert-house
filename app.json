@@ -3,6 +3,7 @@
     "name": "kreme-dessert-house",
     "slug": "kreme-dessert-house",
     "version": "1.0.0",
+    "scheme": "kremesdessert",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

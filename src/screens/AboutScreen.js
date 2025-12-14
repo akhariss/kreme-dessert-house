@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  StyleSheet,
   ScrollView,
   StatusBar,
   Image,
@@ -11,33 +10,35 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Navbar from '../components/Navbar';
 import ThemeText from '../components/atoms/ThemeText';
 import { theme } from '../theme/theme';
+import { aboutScreenStyles } from '../theme/AboutScreenStyles';
+
 // Komponen layar Tentang Kami
 const AboutScreen = ({ navigation }) => {
   return (
     // Struktur utama layar tentang kami
-    <View style={styles.container}>
+    <View style={aboutScreenStyles.container}>
       {/* Status bar dengan konten gelap */}
       <StatusBar barStyle="dark-content" />
       {/* Navbar untuk navigasi */}
       <Navbar navigation={navigation} />
       {/* Konten yang dapat digulir */}
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={aboutScreenStyles.scrollContent}>
         {/* Interior Image */}
-        <View style={styles.imageSection}>
+        <View style={aboutScreenStyles.imageSection}>
           <Image
             source={require('../../assets/images/about-interior.png')}
-            style={styles.interiorImage}
+            style={aboutScreenStyles.interiorImage}
             resizeMode="cover"
           />
           {/* Overlay gradient pada gambar */}
           <LinearGradient
             colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.9)']}
-            style={styles.imageOverlay}
+            style={aboutScreenStyles.imageOverlay}
           />
         </View>
 
         {/* Story Section */}
-        <View style={styles.storySection}>
+        <View style={aboutScreenStyles.storySection}>
           {/* Judul dan deskripsi cerita kami */}
           <ThemeText variant="sectionTitle" style={{ textShadowColor: 'rgba(0, 0, 0, 0.1)', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 2 }}>
             Our Story
@@ -49,14 +50,14 @@ const AboutScreen = ({ navigation }) => {
         </View>
 
         {/* Values Section */}
-        <View style={styles.valuesSection}>
+        <View style={aboutScreenStyles.valuesSection}>
           {/* Judul nilai-nilai kami */}
           <ThemeText variant="sectionTitle" style={{ textShadowColor: 'rgba(0, 0, 0, 0.1)', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 2 }}>
             Our Values
           </ThemeText>
           {/* Daftar nilai-nilai kami */}
-          <View style={styles.valuesList}>
-            <View style={styles.valueItem}>
+          <View style={aboutScreenStyles.valuesList}>
+            <View style={aboutScreenStyles.valueItem}>
               <ThemeText variant="brandName" style={{ color: theme.colors.primary, fontSize: 32 }}>★</ThemeText>
               <ThemeText variant="productName" style={{ color: theme.colors.black, marginTop: theme.spacing.sm }}>
                 Excellence
@@ -65,7 +66,7 @@ const AboutScreen = ({ navigation }) => {
                 Uncompromising quality in every creation
               </ThemeText>
             </View>
-            <View style={styles.valueItem}>
+            <View style={aboutScreenStyles.valueItem}>
               <ThemeText variant="brandName" style={{ color: theme.colors.accent, fontSize: 32 }}>♡</ThemeText>
               <ThemeText variant="productName" style={{ color: theme.colors.black, marginTop: theme.spacing.sm }}>
                 Passion
@@ -75,7 +76,7 @@ const AboutScreen = ({ navigation }) => {
               </ThemeText>
             </View>
 
-            <View style={styles.valueItem}>
+            <View style={aboutScreenStyles.valueItem}>
               <ThemeText variant="brandName" style={{ color: theme.colors.darkPink, fontSize: 32 }}>∞</ThemeText>
               <ThemeText variant="productName" style={{ color: theme.colors.black, marginTop: theme.spacing.sm }}>
                 Tradition
@@ -88,35 +89,35 @@ const AboutScreen = ({ navigation }) => {
         </View>
 
         {/* Contact Section */}
-        <View style={styles.contactSection}>
+        <View style={aboutScreenStyles.contactSection}>
           {/* Judul kunjungi kami */}
           <ThemeText variant="sectionTitle" style={{ textShadowColor: 'rgba(0, 0, 0, 0.1)', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 2 }}>
             Visit Us
           </ThemeText>
 
-          <View style={styles.contactInfo}>
-            <View style={styles.contactItem}>
+          <View style={aboutScreenStyles.contactInfo}>
+            <View style={aboutScreenStyles.contactItem}>
               <Ionicons name="location-outline" size={20} color={theme.colors.primary} />
               <ThemeText variant="description" style={{ color: theme.colors.gray, marginLeft: theme.spacing.sm }}>
                 23 Avenue des Champs-Élysées{'\n'}Jakarta Selatan, Indonesia
               </ThemeText>
             </View>
 
-            <View style={styles.contactItem}>
+            <View style={aboutScreenStyles.contactItem}>
               <Ionicons name="time-outline" size={20} color={theme.colors.primary} />
               <ThemeText variant="description" style={{ color: theme.colors.gray, marginLeft: theme.spacing.sm }}>
                 Mon - Sun: 10:00 AM - 9:00 PM
               </ThemeText>
             </View>
 
-            <View style={styles.contactItem}>
+            <View style={aboutScreenStyles.contactItem}>
               <Ionicons name="mail-outline" size={20} color={theme.colors.primary} />
               <ThemeText variant="description" style={{ color: theme.colors.gray, marginLeft: theme.spacing.sm }}>
                 hello@kremedessert.com
               </ThemeText>
             </View>
 
-            <View style={styles.contactItem}>
+            <View style={aboutScreenStyles.contactItem}>
               <Ionicons name="call-outline" size={20} color={theme.colors.primary} />
               <ThemeText variant="description" style={{ color: theme.colors.gray, marginLeft: theme.spacing.sm }}>
                 +62 21 1234 5678
@@ -128,63 +129,5 @@ const AboutScreen = ({ navigation }) => {
     </View>
   );
 };
-// Gaya untuk komponen AboutScreen
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.white,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: theme.spacing.xxl,
-  },
-  imageSection: {
-    marginBottom: theme.spacing.xxl,
-    borderRadius: theme.borderRadius.lg,
-    overflow: 'hidden',
-    ...theme.shadows.medium,
-  },
-  interiorImage: {
-    width: '100%',
-    height: 250,
-  },
-  imageOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    height: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  storySection: {
-    marginBottom: theme.spacing.xxl,
-    alignItems: 'center',
-  },
-  valuesSection: {
-    marginBottom: theme.spacing.xxl,
-    alignItems: 'center',
-  },
-  valuesList: {
-    width: '100%',
-  },
-  valueItem: {
-    alignItems: 'center',
-    marginBottom: theme.spacing.xl,
-    paddingHorizontal: theme.spacing.xl,
-  },
-  contactSection: {
-    alignItems: 'center',
-  },
-  contactInfo: {
-    alignItems: 'center',
-    paddingHorizontal: theme.spacing.xl,
-  },
-  contactItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
-  },
-});
 
 export default AboutScreen;
